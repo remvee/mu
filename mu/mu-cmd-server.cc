@@ -451,8 +451,15 @@ each_contact_sexp (const char* full_address,
         if (!email || !strstr (email, "@"))
                 return;
 
+        /* using name and email yields prettier results than full_address */
+        auto full_email_address{std::string{full_address}};
+        if (name) {
+          const auto address{std::string{name} + " <" + std::string{email} + ">"};
+          full_email_address = address;
+        }
+
         g_string_append_printf (sdata->gstr, "(%s . %zu)\n",
-                                quote(full_address).c_str(), sdata->rank);
+                                quote(full_email_address).c_str(), sdata->rank);
 }
 
 /**
